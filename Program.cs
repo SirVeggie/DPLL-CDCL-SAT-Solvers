@@ -10,11 +10,21 @@ namespace SAT_Solver {
     public static class Program {
 
         const string testfile = @"S:\- Library -\Projects\University\Automated logical reasoning\Simple Solver\test.cnf";
-        const string satdir = @"S:\- Library -\Projects\University\SAT-Solver\sat-instances";
+        const string satdir = @"S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\sat-instances";
 
         static void Main(string[] args) {
+            if (args.Length == 0) {
+                Console.WriteLine("No arguments given");
+                return;
+            }
+
             if (args[0] == "benchmark") {
-                Benchmark(args[1], 120000);
+                if (args.Length < 3) {
+                    Console.WriteLine("Not enough arguments");
+                    return;
+                }
+
+                Benchmark(args.Length < 4 ? null : args[3], args[1], args[2], 120000);
                 return;
             }
 
@@ -34,20 +44,32 @@ namespace SAT_Solver {
             var result = solver.Run();
             Console.WriteLine("Time elapsed: " + watch.ElapsedMilliseconds + " ms");
             Console.WriteLine(result);
-            CreateTestFile(dimacs, result);
+
+            if (new DirectoryInfo(testfile).Exists) {
+                CreateTestFile(dimacs, result);
+            }
         }
 
-        static void Benchmark(string type, int timeout) {
-            foreach (var file in Directory.GetFiles(satdir)) {
-                Console.Write($"Solving file '{Path.GetFileName(file)}' with {(type.ToLower() == "cdcl" ? "CDCL" : "DPLL")}: ");
-                var dimacs = File.ReadAllText(file);
+        static void Benchmark(string folder, string type, string heuristic, int timeout) {
+            var dir = new DirectoryInfo(folder ?? satdir);
+            if (!dir.Exists) {
+                Console.WriteLine("Couldn't find specified folder");
+            }
+
+            foreach (var file in dir.GetFiles()) {
+                if (file.Extension != ".cnf") {
+                    continue;
+                }
+
+                Console.Write($"Solving file '{file.Name}' with {(type.ToLower() == "cdcl" ? "CDCL" : "DPLL")}: ");
+                var dimacs = File.ReadAllText(file.FullName);
                 var watch = Stopwatch.StartNew();
                 SATSolver solver;
 
                 if (type.ToLower() == "cdcl") {
-                    solver = new CDCL(dimacs, false, null, timeout);
+                    solver = new CDCL(dimacs, false, heuristic, timeout);
                 } else {
-                    solver = new DPLL(dimacs, false, null, timeout);
+                    solver = new DPLL(dimacs, false, heuristic, timeout);
                 }
 
                 var result = solver.Run();

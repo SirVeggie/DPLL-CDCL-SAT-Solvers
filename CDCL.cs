@@ -14,6 +14,9 @@ namespace SAT_Solver {
         private string heuristic;
         private List<Clause> learnedClauses;
 
+        private double[] vsids;
+        private const double vsidsDecay = 0.01;
+
         public CDCL(string dimacs, bool debug, string heuristic, int timeout = 0) {
             this.debug = debug;
             this.heuristic = heuristic;
@@ -43,6 +46,7 @@ namespace SAT_Solver {
             branch = new Stack<Literal>();
             trail = new Trail();
             learnedClauses = new List<Clause>();
+            vsids = new double[literals.Count];
         }
 
         public override SolverResult Run() {
@@ -141,6 +145,7 @@ namespace SAT_Solver {
             latestConflict = null;
             AddClause(conflict.Clause);
             RevertToLevel(conflict.Level);
+            ApplyVSIDS(conflict.Clause);
 
             var empty = FindEmpty(conflict.Clause);
 
@@ -155,7 +160,7 @@ namespace SAT_Solver {
                 trail.Add(node);
                 return node;
             } else {
-                return Decision(empty[0].Reverse);
+                return Decision();
             }
         }
 
@@ -181,6 +186,16 @@ namespace SAT_Solver {
             return list;
         }
 
+        private void ApplyVSIDS(Clause clause) {
+            for (int i = 0; i < vsids.Length; i++) {
+                vsids[i] *= 1 - vsidsDecay;
+            }
+
+            foreach (var lit in clause) {
+                vsids[lit.index] += 1;
+            }
+        }
+
         private void InitialUnitPropagation(out Conflict conflict) {
             conflict = null;
             foreach (var clause in Clauses) {
@@ -201,17 +216,15 @@ namespace SAT_Solver {
 
         private void UnitPropagation(TrailNode node, out Conflict conflict) {
             conflict = null;
-            var nodes = new List<TrailNode>();
 
             foreach (var clause in ClauseReferences[node.Literal.index]) {
                 if (TryPropagate(node, clause, out bool error) is Literal empty) {
                     AssignLiteral(empty);
                     var newNode = new TrailNode(level, empty, clause);
                     trail.Add(newNode);
-                    nodes.Add(newNode);
-                    //UnitPropagation(newNode, out conflict);
-                    //if (conflict != null)
-                    //return;
+                    UnitPropagation(newNode, out conflict);
+                    if (conflict != null)
+                        return;
                 }
 
                 if (error) {
@@ -219,12 +232,6 @@ namespace SAT_Solver {
                     conflict = new Conflict(targetLevel, learnedClause);
                     return;
                 }
-            }
-
-            foreach (var next in nodes) {
-                UnitPropagation(next, out conflict);
-                if (conflict != null)
-                    return;
             }
         }
 
@@ -259,16 +266,8 @@ namespace SAT_Solver {
 
             return null;
         }
-        private int dupes = 0;
-        private void AddClause(Clause clause) {
-            if (learnedClauses.Any(c => c.Match(clause))) {
-                //Console.WriteLine($"Learned duplicate: {clause}");
-                //throw new Exception("Learned same clause twice");
-                //Console.WriteLine($"Trail: {string.Join(" ", trail)}");
-                Console.WriteLine("Duplicate clauses learned: " + ++dupes);
-                return;
-            }
 
+        private void AddClause(Clause clause) {
             learnedClauses.Add(clause);
             Clauses.Add(clause);
             foreach (var literal in clause) {
@@ -279,6 +278,8 @@ namespace SAT_Solver {
         private Literal SelectLiteral() {
             if (heuristic == "random")
                 return RandomPick();
+            if (heuristic == "vsids")
+                return VSIDS();
             return UseBranchOrder();
         }
 
@@ -304,6 +305,16 @@ namespace SAT_Solver {
                     return new Literal(val, false);
                 }
             }
+        }
+
+        private Literal VSIDS() {
+            foreach (var item in vsids.Select((value, index) => new { index, value }).OrderByDescending(x => x.value)) {
+                if (!literals[item.index].HasValue) {
+                    return new Literal(item.index, false);
+                }
+            }
+
+            throw new Exception("Branchable literal not found");
         }
         #endregion
     }
