@@ -219,14 +219,15 @@ namespace SAT_Solver {
 
         private void UnitPropagation(TrailNode node, out Conflict conflict) {
             conflict = null;
-            var nodes = new List<TrailNode>();
 
             foreach (var clause in ClauseReferences[node.Literal.index]) {
                 if (TryPropagate(node, clause, out bool error) is Literal empty) {
                     AssignLiteral(empty);
                     var newNode = new TrailNode(level, empty, clause);
                     trail.Add(newNode);
-                    nodes.Add(newNode);
+                    UnitPropagation(newNode, out conflict);
+                    if (conflict != null)
+                        return;
                 }
 
                 if (error) {
@@ -234,12 +235,6 @@ namespace SAT_Solver {
                     conflict = new Conflict(targetLevel, learnedClause);
                     return;
                 }
-            }
-
-            foreach (var next in nodes) {
-                UnitPropagation(next, out conflict);
-                if (conflict != null)
-                    return;
             }
         }
 
@@ -275,21 +270,7 @@ namespace SAT_Solver {
             return null;
         }
 
-        private int dupes = 0;
-        private List<Clause> dupelist = new List<Clause>();
         private void AddClause(Clause clause) {
-            //if (learnedClauses.Any(c => c.Match(clause))) {
-            //    Console.WriteLine($"Learned duplicate: {clause}");
-            //    //throw new Exception("Learned same clause twice");
-            //    //Console.WriteLine($"Trail: {string.Join(" ", trail)}");
-            //    Console.WriteLine("Duplicate clauses learned: " + ++dupes);
-            //    if (dupelist.Any(x => x.Match(clause))) {
-            //        Console.WriteLine($"Learned duplicate duplicate: {clause}");
-            //    }
-            //    dupelist.Add(clause);
-            //    return;
-            //}
-
             learnedClauses.Add(clause);
             Clauses.Add(clause);
             foreach (var literal in clause) {
@@ -300,9 +281,9 @@ namespace SAT_Solver {
         private Literal SelectLiteral() {
             if (heuristic == "random")
                 return RandomPick();
-            if (heuristic == "order")
-                return UseBranchOrder();
-            return VSIDS();
+            if (heuristic == "vsids")
+                return VSIDS();
+            return UseBranchOrder();
         }
 
         #region heuristics

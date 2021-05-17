@@ -10,7 +10,7 @@ namespace SAT_Solver {
     public static class Program {
 
         const string testfile = @"S:\- Library -\Projects\University\Automated logical reasoning\Simple Solver\test.cnf";
-        const string satdir = @"S:\- Library -\Projects\University\SAT-Solver\sat-instances";
+        const string satdir = @"S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\sat-instances";
 
         static void Main(string[] args) {
             if (args[0] == "benchmark") {
