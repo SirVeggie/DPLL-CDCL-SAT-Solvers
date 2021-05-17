@@ -14,6 +14,9 @@ namespace SAT_Solver {
         private string heuristic;
         private List<Clause> learnedClauses;
 
+        private double[] vsids;
+        private const double vsidsDecay = 0.01;
+
         public CDCL(string dimacs, bool debug, string heuristic, int timeout = 0) {
             this.debug = debug;
             this.heuristic = heuristic;
@@ -43,6 +46,7 @@ namespace SAT_Solver {
             branch = new Stack<Literal>();
             trail = new Trail();
             learnedClauses = new List<Clause>();
+            vsids = new double[literals.Count];
         }
 
         public override SolverResult Run() {
@@ -141,6 +145,7 @@ namespace SAT_Solver {
             latestConflict = null;
             AddClause(conflict.Clause);
             RevertToLevel(conflict.Level);
+            ApplyVSIDS(conflict.Clause);
 
             var empty = FindEmpty(conflict.Clause);
 
@@ -149,14 +154,18 @@ namespace SAT_Solver {
                 StateDebug();
             }
 
-            if (empty.Count == 1) {
-                AssignLiteral(empty[0]);
-                var node = new TrailNode(level, empty[0], conflict.Clause);
+            if (empty.index != -1) {
+                AssignLiteral(empty);
+                var node = new TrailNode(level, empty, conflict.Clause);
                 trail.Add(node);
                 return node;
-            } else {
-                return Decision(empty[0].Reverse);
             }
+
+            if (level != 0) {
+                RevertToLevel(0);
+            }
+
+            return Decision();
         }
 
         private void RevertToLevel(int targetLevel) {
@@ -170,15 +179,24 @@ namespace SAT_Solver {
             level = targetLevel;
         }
 
-        private List<Literal> FindEmpty(Clause clause) {
-            List<Literal> list = new List<Literal>();
+        private Literal FindEmpty(Clause clause) {
             foreach (var literal in clause) {
                 if (!literals[literal.index].HasValue) {
-                    list.Add(literal);
+                    return literal;
                 }
             }
 
-            return list;
+            return new Literal(-1, false);
+        }
+
+        private void ApplyVSIDS(Clause clause) {
+            for (int i = 0; i < vsids.Length; i++) {
+                vsids[i] *= 1 - vsidsDecay;
+            }
+
+            foreach (var lit in clause) {
+                vsids[lit.index] += 1;
+            }
         }
 
         private void InitialUnitPropagation(out Conflict conflict) {
@@ -209,9 +227,6 @@ namespace SAT_Solver {
                     var newNode = new TrailNode(level, empty, clause);
                     trail.Add(newNode);
                     nodes.Add(newNode);
-                    //UnitPropagation(newNode, out conflict);
-                    //if (conflict != null)
-                    //return;
                 }
 
                 if (error) {
@@ -259,15 +274,21 @@ namespace SAT_Solver {
 
             return null;
         }
+
         private int dupes = 0;
+        private List<Clause> dupelist = new List<Clause>();
         private void AddClause(Clause clause) {
-            if (learnedClauses.Any(c => c.Match(clause))) {
-                //Console.WriteLine($"Learned duplicate: {clause}");
-                //throw new Exception("Learned same clause twice");
-                //Console.WriteLine($"Trail: {string.Join(" ", trail)}");
-                Console.WriteLine("Duplicate clauses learned: " + ++dupes);
-                return;
-            }
+            //if (learnedClauses.Any(c => c.Match(clause))) {
+            //    Console.WriteLine($"Learned duplicate: {clause}");
+            //    //throw new Exception("Learned same clause twice");
+            //    //Console.WriteLine($"Trail: {string.Join(" ", trail)}");
+            //    Console.WriteLine("Duplicate clauses learned: " + ++dupes);
+            //    if (dupelist.Any(x => x.Match(clause))) {
+            //        Console.WriteLine($"Learned duplicate duplicate: {clause}");
+            //    }
+            //    dupelist.Add(clause);
+            //    return;
+            //}
 
             learnedClauses.Add(clause);
             Clauses.Add(clause);
@@ -279,7 +300,9 @@ namespace SAT_Solver {
         private Literal SelectLiteral() {
             if (heuristic == "random")
                 return RandomPick();
-            return UseBranchOrder();
+            if (heuristic == "order")
+                return UseBranchOrder();
+            return VSIDS();
         }
 
         #region heuristics
@@ -304,6 +327,16 @@ namespace SAT_Solver {
                     return new Literal(val, false);
                 }
             }
+        }
+
+        private Literal VSIDS() {
+            foreach (var item in vsids.Select((value, index) => new { index, value }).OrderByDescending(x => x.value)) {
+                if (!literals[item.index].HasValue) {
+                    return new Literal(item.index, false);
+                }
+            }
+
+            throw new Exception("Branchable literal not found");
         }
         #endregion
     }

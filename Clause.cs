@@ -41,6 +41,15 @@ namespace SAT_Solver {
         }
 
         public bool Contains(Literal literal) => Literals.Contains(literal);
+        public bool ContainsExact(Literal literal) {
+            foreach (var lit in Literals) {
+                if (lit.raw == literal.raw) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public void Resolution(Clause other) {
             int old = Count;
@@ -53,8 +62,12 @@ namespace SAT_Solver {
         }
 
         public bool Match(Clause clause) {
+            if (Count != clause.Count) {
+                return false;
+            }
+
             foreach (var literal in clause) {
-                if (!Contains(literal)) {
+                if (!ContainsExact(literal)) {
                     return false;
                 }
             }
