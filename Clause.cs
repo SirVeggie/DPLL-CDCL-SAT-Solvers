@@ -62,10 +62,8 @@ namespace SAT_Solver {
         }
 
         public bool Match(Clause clause) {
-            if (Count != clause.Count) {
+            if (Count != clause.Count)
                 return false;
-            }
-
             foreach (var literal in clause) {
                 if (!ContainsExact(literal)) {
                     return false;

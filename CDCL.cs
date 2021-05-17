@@ -154,18 +154,14 @@ namespace SAT_Solver {
                 StateDebug();
             }
 
-            if (empty.index != -1) {
-                AssignLiteral(empty);
-                var node = new TrailNode(level, empty, conflict.Clause);
+            if (empty.Count == 1) {
+                AssignLiteral(empty[0]);
+                var node = new TrailNode(level, empty[0], conflict.Clause);
                 trail.Add(node);
                 return node;
+            } else {
+                return Decision();
             }
-
-            if (level != 0) {
-                RevertToLevel(0);
-            }
-
-            return Decision();
         }
 
         private void RevertToLevel(int targetLevel) {
@@ -179,14 +175,15 @@ namespace SAT_Solver {
             level = targetLevel;
         }
 
-        private Literal FindEmpty(Clause clause) {
+        private List<Literal> FindEmpty(Clause clause) {
+            List<Literal> list = new List<Literal>();
             foreach (var literal in clause) {
                 if (!literals[literal.index].HasValue) {
-                    return literal;
+                    list.Add(literal);
                 }
             }
 
-            return new Literal(-1, false);
+            return list;
         }
 
         private void ApplyVSIDS(Clause clause) {
