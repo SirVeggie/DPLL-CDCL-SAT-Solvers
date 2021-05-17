@@ -1,0 +1,26 @@
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.csprojAssemblyReference.cache
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.AssemblyInfoInputs.cache
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.AssemblyInfo.cs
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.csproj.CoreCompileInputs.cache
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.exe
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.deps.json
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.runtimeconfig.json
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.runtimeconfig.dev.json
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.dll
+S:\- Library -\Projects\University\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.pdb
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.dll
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.pdb
+S:\- Library -\Projects\University\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.genruntimeconfig.cache
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.exe
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.deps.json
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.runtimeconfig.json
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.runtimeconfig.dev.json
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.dll
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\bin\Debug\netcoreapp3.1\SAT-Solver.pdb
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.csprojAssemblyReference.cache
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.AssemblyInfoInputs.cache
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.AssemblyInfo.cs
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.csproj.CoreCompileInputs.cache
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.dll
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.pdb
+S:\- Library -\Projects\University\Automated logical reasoning\SAT-Solver\obj\Debug\netcoreapp3.1\SAT-Solver.genruntimeconfig.cache

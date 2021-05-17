@@ -1,0 +1,13 @@
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.exe
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.deps.json
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.runtimeconfig.json
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.runtimeconfig.dev.json
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.dll
+S:\- Library -\Projects\University\DPLL-Solver\bin\Debug\netcoreapp3.1\DPLL-Solver.pdb
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.csprojAssemblyReference.cache
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.AssemblyInfoInputs.cache
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.AssemblyInfo.cs
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.csproj.CoreCompileInputs.cache
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.dll
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.pdb
+S:\- Library -\Projects\University\DPLL-Solver\obj\Debug\netcoreapp3.1\DPLL-Solver.genruntimeconfig.cache

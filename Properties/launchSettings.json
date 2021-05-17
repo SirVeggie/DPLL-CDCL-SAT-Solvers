@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SAT-Solver": {
+      "commandName": "Project",
+      "commandLineArgs": "\"S:\\- Downloads -\\kissat-sc2020\\problem.cnf\" cdcl x debug"
+    }
+  }
+}
